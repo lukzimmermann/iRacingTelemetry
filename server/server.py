@@ -57,7 +57,7 @@ def parseData(ir):
             water_level=round(ir["WaterLevel"],3),
             water_temperature=round(ir["WaterTemp"],1),
             engine_flags=EngineFlags(
-                water_tepmperature_warning=bool(ir["EngineWarnings"] & 0x01),
+                water_temperature_warning=bool(ir["EngineWarnings"] & 0x01),
                 oil_temperature_warning=bool(ir["EngineWarnings"] & 0x40),
                 oil_pressure_warning=bool(ir["EngineWarnings"] & 0x04),
                 fuel_pressure_warning=bool(ir["EngineWarnings"] & 0x02),
