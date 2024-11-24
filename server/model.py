@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Vehicle:
     speed: float
-    steering_wheel_abgle: float
+    steering_wheel_angle: float
     
 @dataclass
 class Engine:
@@ -25,7 +25,7 @@ class Fuel:
     fuel_level: float
     level_pct: int
     pressure: float
-    use_per_houre: float
+    use_per_hour: float
 
 
 @dataclass
@@ -54,7 +54,7 @@ class Brake:
 class Enviroment:
     air_density: float
     air_pressure: float
-    air_temperatur: float
+    air_temperature: float
     fog_level: float
     track_temperature: float
 

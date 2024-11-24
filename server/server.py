@@ -30,12 +30,12 @@ def parseData(ir):
         enviroment=Enviroment(
             air_density=round(ir["AirDensity"],3), 
             air_pressure=round(ir["AirPressure"],0), 
-            air_temperatur=round(ir["AirTemp"],1),
+            air_temperature=round(ir["AirTemp"],1),
             fog_level=round(ir["FogLevel"],1),
             track_temperature=round(ir["TrackTempCrew"],1)), 
         vehicle=Vehicle(
             speed=round(ir["Speed"],3),
-            steering_wheel_abgle=round(ir["SteeringWheelAngle"],3)),
+            steering_wheel_angle=round(ir["SteeringWheelAngle"],3)),
         engine=Engine(
             rpm=round(ir["RPM"],0), 
             throttle=round(ir["Throttle"],3),
@@ -52,7 +52,7 @@ def parseData(ir):
             fuel_level=round(ir["FuelLevel"],3),
             level_pct=round(ir["FuelLevelPct"],3),
             pressure=round(ir["FuelPress"],3),
-            use_per_houre=round(ir["FuelUsePerHour"],3)),
+            use_per_hour=round(ir["FuelUsePerHour"],3)),
         tires=Tires(
             frontLeft=Tire(
                 left_carcass_temperature=round(ir["LFtempCL"],1),
