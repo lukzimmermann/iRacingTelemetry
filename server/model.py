@@ -5,6 +5,16 @@ from dataclasses import dataclass
 class Vehicle:
     speed: float
     steering_wheel_angle: float
+
+@dataclass
+class EngineFlags:
+    water_tepmperature_warning: bool
+    oil_temperature_warning: bool
+    oil_pressure_warning: bool
+    fuel_pressure_warning: bool
+    engine_stall: bool
+    pit_speed_limiter: bool
+    rev_limiter: bool
     
 @dataclass
 class Engine:
@@ -19,6 +29,7 @@ class Engine:
     voltage: float
     water_level: float
     water_temperature: float
+    engine_flags: EngineFlags
 
 @dataclass
 class Fuel:
@@ -51,7 +62,7 @@ class Brake:
     abs_active: bool
 
 @dataclass
-class Enviroment:
+class Environment:
     air_density: float
     air_pressure: float
     air_temperature: float
@@ -60,7 +71,7 @@ class Enviroment:
 
 @dataclass
 class Telemetry:
-    enviroment: Enviroment
+    environment: Environment
     vehicle: Vehicle
     engine: Engine
     fuel: Fuel

@@ -2,23 +2,31 @@ from dataclasses import asdict
 import irsdk
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 import json
 import asyncio
 import random
 
-from model import Brake, Enviroment, Fuel, Telemetry, Tire, Tires, Vehicle, Engine
+from model import Brake, EngineFlags, Environment, Fuel, Telemetry, Tire, Tires, Vehicle, Engine
 ir = irsdk.IRSDK()
 ir.startup()
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 async def telemetry_stream():
     while True:
-        # Simulierte Telemetriedaten
-        telemetry_data = json.dumps(asdict(parseData(ir)), indent=4)
-        # Streamen der Daten im SSE-Format
+        telemetry_data = asdict(parseData(ir))
+        print(bin(ir["EngineWarnings"]))
         yield f"data: {json.dumps(telemetry_data)}\n\n"
-        await asyncio.sleep(0.05)  # 10 Hz Update-Rate
+        await asyncio.sleep(0.02)
 
 @app.get("/telemetry/stream")
 async def telemetry_endpoint():
@@ -27,7 +35,7 @@ async def telemetry_endpoint():
 
 def parseData(ir):
     return Telemetry(
-        enviroment=Enviroment(
+        environment=Environment(
             air_density=round(ir["AirDensity"],3), 
             air_pressure=round(ir["AirPressure"],0), 
             air_temperature=round(ir["AirTemp"],1),
@@ -47,7 +55,17 @@ def parseData(ir):
             oil_temperature=round(ir["OilTemp"],1),
             voltage=round(ir["Voltage"],3),
             water_level=round(ir["WaterLevel"],3),
-            water_temperature=round(ir["WaterTemp"],1)),
+            water_temperature=round(ir["WaterTemp"],1),
+            engine_flags=EngineFlags(
+                water_tepmperature_warning=bool(ir["EngineWarnings"] & 0x01),
+                oil_temperature_warning=bool(ir["EngineWarnings"] & 0x40),
+                oil_pressure_warning=bool(ir["EngineWarnings"] & 0x04),
+                fuel_pressure_warning=bool(ir["EngineWarnings"] & 0x02),
+                engine_stall=bool(ir["EngineWarnings"] & 0x08),
+                pit_speed_limiter=bool(ir["EngineWarnings"] & 0x10),
+                rev_limiter=bool(ir["EngineWarnings"] & 0x20)
+
+            )),
         fuel=Fuel(
             fuel_level=round(ir["FuelLevel"],3),
             level_pct=round(ir["FuelLevelPct"],3),
