@@ -8,7 +8,7 @@ class Vehicle:
 
 @dataclass
 class EngineFlags:
-    water_tepmperature_warning: bool
+    water_temperature_warning: bool
     oil_temperature_warning: bool
     oil_pressure_warning: bool
     fuel_pressure_warning: bool
@@ -70,6 +70,14 @@ class Environment:
     track_temperature: float
 
 @dataclass
+class Lap:
+    best_lap_time: float
+    last_lap_time: float
+    delta_time: float
+    lap_count: int
+    position: int
+
+@dataclass
 class Telemetry:
     environment: Environment
     vehicle: Vehicle
@@ -77,3 +85,4 @@ class Telemetry:
     fuel: Fuel
     tires: Tires
     brake: Brake
+    lap: Lap

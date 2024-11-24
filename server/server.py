@@ -7,7 +7,7 @@ import json
 import asyncio
 import random
 
-from model import Brake, EngineFlags, Environment, Fuel, Telemetry, Tire, Tires, Vehicle, Engine
+from model import Brake, EngineFlags, Environment, Fuel, Lap, Telemetry, Tire, Tires, Vehicle, Engine
 ir = irsdk.IRSDK()
 ir.startup()
 
@@ -24,7 +24,6 @@ app.add_middleware(
 async def telemetry_stream():
     while True:
         telemetry_data = asdict(parseData(ir))
-        print(bin(ir["EngineWarnings"]))
         yield f"data: {json.dumps(telemetry_data)}\n\n"
         await asyncio.sleep(0.02)
 
@@ -64,7 +63,6 @@ def parseData(ir):
                 engine_stall=bool(ir["EngineWarnings"] & 0x08),
                 pit_speed_limiter=bool(ir["EngineWarnings"] & 0x10),
                 rev_limiter=bool(ir["EngineWarnings"] & 0x20)
-
             )),
         fuel=Fuel(
             fuel_level=round(ir["FuelLevel"],3),
@@ -102,5 +100,12 @@ def parseData(ir):
                 right_carcass_tread_remaining=round(ir["RRwearR"],3))),
         brake=Brake(
             brake=round(ir["Brake"],3),
-            abs_active=ir["BrakeABSactive"])
+            abs_active=ir["BrakeABSactive"]),
+        lap=Lap(
+            best_lap_time=round(ir["LapLastLapTime"],3),
+            last_lap_time=round(ir["LapBestLapTime"],3),
+            lap_count=round(ir["LapCompleted"],3),
+            position=round(ir["PlayerCarPosition"],3),
+            delta_time=round(ir["LapDeltaToBestLap"],3)
+        )
     )
